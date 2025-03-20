@@ -196,4 +196,3 @@ Allows additional HTTP versions for improved performance.
 ### **Final Step: Create Distribution**
 Once all configurations are set, click **Create Distribution** to deploy your CloudFront distribution.
 
-Would you like a step-by-step guide for setting this up in AWS Console or Terraform? 😊
