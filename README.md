@@ -1,103 +1,178 @@
-# CloudFront (Securely deliver content with low latency and high transfer speeds)
-- Amazon CloudFront is a fast content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency and high transfer speeds.
-- Amazon CloudFront is a web service that speeds up distribution of your static and dynamic web content, such as .html, .css, .js, and image files, to your users. CloudFront delivers your content through a worldwide network of data centers called edge locations. When a user requests content that you're serving with CloudFront, the request is routed to the edge location that provides the lowest latency (time delay), so that content is delivered with the best possible performance.
-  - If the content is already in the edge location with the lowest latency, CloudFront delivers it immediately.
-  - If the content is not in that edge location, CloudFront retrieves it from an origin that you've defined—such as an Amazon S3 bucket, a MediaPackage channel, or an HTTP server (for example, a web server) that you have identified as the source for the definitive version of your content.
-- CloudFront speeds up the distribution of your content by routing each user request through the AWS backbone network to the edge location that can best serve your content. Typically, this is a CloudFront edge server that provides the fastest delivery to the viewer. Using the AWS network dramatically reduces the number of networks that your users' requests must pass through, which improves performance. Users get lower latency—the time it takes to load the first byte of the file—and higher data transfer rates.
-- You also get increased reliability and availability because copies of your files (also known as objects) are now held (or cached) in multiple edge locations around the world.
+## **Amazon CloudFront Menu Options Explained**
 
-## CloudFront Workflow
-![image](https://github.com/user-attachments/assets/5ea0955b-9437-4039-9957-7cb167ff9558)
+Amazon CloudFront is a Content Delivery Network (CDN) that securely delivers data, videos, applications, and APIs to customers globally with low latency and high transfer speeds.
 
-Amazon CloudFront is a **Content Delivery Network (CDN)** service that speeds up the delivery of your web content by caching it in multiple locations worldwide. This reduces latency, improves performance, and helps efficiently serve users from the nearest location.
-
-### **Step-by-Step CloudFront Workflow**
-The image illustrates how CloudFront works in 5 key steps:
-
-#### **1. Storing Content in the Origin Server**
-   - The origin server is the main storage for your web content.
-   - It can be **Amazon S3 (Simple Storage Service)** or an **HTTP server** (such as Apache, Nginx, or an EC2 instance running a web server).
-   - You **upload objects** (files like images, videos, HTML, JavaScript, and CSS) to the origin server.
-
-#### **2. Defining the Objects**
-   - These objects are the actual content that users will request.
-   - CloudFront can deliver static assets (images, stylesheets, JavaScript) and dynamic content (APIs, videos, and live streaming).
-   - If stored in **Amazon S3**, you can make them **public** or **private** (using signed URLs/cookies for restricted access).
-
-#### **3. Creating a CloudFront Distribution**
-   - A **distribution** is a CloudFront setup that connects your origin (Amazon S3/HTTP server) to CloudFront’s edge locations.
-   - You configure:
-     - **Origin URL** (where CloudFront fetches data from)
-     - **Caching policies** (how long content is stored in edge locations)
-     - **Security settings** (encryption, signed URLs, authentication)
-     - **Logging options** (to track user access)
-
-#### **4. CloudFront Assigns a Unique URL**
-   - After creating a distribution, CloudFront generates a **unique domain name** (e.g., `d111111abcdef8.cloudfront.net`).
-   - You can use this domain to serve content or map it to your **custom domain** (e.g., `www.example.com`).
-
-#### **5. Serving Content from Edge Locations**
-   - CloudFront caches copies of your content at **edge locations** (servers worldwide).
-   - When a user requests a file:
-     - If it’s **cached** in the nearest edge location → CloudFront delivers it instantly.
-     - If it’s **not cached** → CloudFront fetches it from the origin, caches it, and serves the user.
-   - This process reduces latency, improves load times, and saves bandwidth.
+### **1. CloudFront**
+- **What**: The main dashboard for CloudFront services.
+- **Why**: Provides an overview of CloudFront distributions, settings, and performance.
+- **Features**:
+  - Quick access to all CloudFront configurations.
+  - Overview of key metrics like data transfer, request counts, and cache hit ratios.
+  - Security settings like AWS WAF and AWS Shield integration.
+- **Use Case**: An e-commerce website uses CloudFront to distribute images, CSS, and JavaScript files globally, reducing page load times.
 
 ---
 
-### **Why Use Amazon CloudFront?**
-🔹 **Faster Load Times** → Content is served from the nearest location.  
-🔹 **Reduces Server Load** → Edge locations handle most traffic, reducing requests to your origin.  
-🔹 **Highly Scalable** → Automatically handles millions of requests per second.  
-🔹 **Security Features** → Supports HTTPS, signed URLs, AWS Shield (DDoS protection), and IAM-based access controls.  
-🔹 **Cost-Effective** → You pay for what you use, and caching reduces data transfer costs.  
+### **2. Distributions**
+- **What**: A CloudFront distribution defines how content is delivered to users.
+- **Why**: It configures caching behavior, security settings, and origin details.
+- **Features**:
+  - **Web & RTMP Distributions**: Supports web (HTTP/HTTPS) and streaming (RTMP).
+  - **Origins & Origin Groups**: Configure multiple origins (S3, EC2, ALB, etc.).
+  - **Behaviors**: Define cache policies, request routing, and compression settings.
+  - **Geo-Restrictions**: Block or allow content based on geographic locations.
+  - **SSL/TLS Certificates**: Secure content with HTTPS.
+- **Use Case**: A media company sets up a CloudFront distribution to deliver HD video content globally with low latency.
 
 ---
 
-### **Advanced Configuration**
-🔹 **Custom Domain Name (CNAMEs)** → Use your own domain (`www.example.com`) instead of the CloudFront URL.  
-🔹 **Cache Expiration** → Set expiration times for content in edge locations (default: 24 hours).  
-🔹 **Private Content** → Use signed URLs and signed cookies to restrict access.  
-🔹 **Origin Shield** → Adds another caching layer to further reduce load on the origin.  
-🔹 **AWS WAF Integration** → Protect against common web attacks.  
+### **3. Policies**
+- **What**: Define caching, origin request, and response behavior.
+- **Why**: Allows custom caching rules and access control for CloudFront distributions.
+- **Features**:
+  - **Cache Policies**: Control TTL (Time-To-Live) settings.
+  - **Origin Request Policies**: Specify headers, cookies, and query strings.
+  - **Response Headers Policies**: Add security headers (CORS, CSP).
+- **Use Case**: A SaaS platform configures custom cache policies to serve different content versions based on device types.
 
 ---
 
-### **Features of AWS CloudFront**
-1. **Low Latency & High Performance** – Uses edge locations to cache content closer to users.
-2. **Security** – Integrates with AWS Shield, WAF, and ACM for DDoS protection and secure HTTPS connections.
-3. **Customizable Content Delivery** – Supports dynamic and static content, video streaming, and API acceleration.
-4. **Integration with AWS Services** – Works with S3, EC2, Elastic Load Balancer (ELB), and Lambda@Edge.
-5. **Access Control** – Restricts access using signed URLs, signed cookies, and geo-restrictions.
-6. **Logging & Monitoring** – Provides real-time logs and integrates with CloudWatch and AWS X-Ray for insights.
-7. **Cost Optimization** – Offers price classes to optimize costs based on performance needs.
+### **4. Functions**
+- **What**: CloudFront Functions enable lightweight JavaScript execution at the edge.
+- **Why**: Modify HTTP requests and responses for faster content delivery.
+- **Features**:
+  - **Lightweight JavaScript Execution**: Runs at CloudFront Edge locations.
+  - **Low Latency (<1ms execution time)**.
+  - **Modify Headers, Redirects, Authentication**.
+- **Use Case**: An online magazine uses CloudFront Functions to rewrite URLs and redirect users based on their language preferences.
 
 ---
 
-## **Understanding CloudFront with an S3 Bucket**
-### **Scenario:**
-- An **S3 bucket** is created in a US region.
-- A **user from the Asia-Pacific region** attempts to access an object stored in the S3 bucket.
-- Direct access to the S3 bucket introduces **latency** due to the geographic distance.
-- **CloudFront** mitigates latency by caching content at an edge location near the user, ensuring faster response times.
-
-### **How CloudFront Works with S3:**
-1. A user requests a static file stored in an **S3 bucket**.
-2. CloudFront checks if the requested file is **cached** in the nearest edge location.
-3. If the file is **cached**, CloudFront serves it immediately.
-4. If the file is **not cached**, CloudFront retrieves it from S3, caches it at the edge location, and delivers it to the user.
-5. Subsequent requests for the same file are served from the edge location, reducing latency.
+### **5. Static IPs**
+- **What**: Assigns static IP addresses for CloudFront origins.
+- **Why**: Useful for applications requiring consistent outbound IPs.
+- **Features**:
+  - Dedicated IPs for outbound traffic.
+  - Improves security by allowing firewall rules.
+- **Use Case**: A financial services company restricts database access to only CloudFront static IPs.
 
 ---
 
-### **AWS CloudFront Pricing**
-AWS CloudFront pricing is based on:
-1. **Data Transfer Out** – Charged per GB based on region.
-2. **Requests Pricing** – HTTP/HTTPS requests per 10,000 requests.
-3. **Invalidation Requests** – First 1,000 paths free; additional at $0.005 per path.
-4. **Function Execution Costs** – Lambda@Edge execution and processing charges.
+### **6. VPC Origins**
+- **What**: Enables CloudFront to connect securely to Amazon VPC resources.
+- **Why**: Securely delivers content from private origins.
+- **Features**:
+  - **PrivateLink Integration**: Direct VPC communication.
+  - **Increased Security**: No exposure to the public internet.
+- **Use Case**: A corporate intranet uses CloudFront to serve internal applications hosted in a private VPC.
 
-To estimate costs, use the **AWS Pricing Calculator**.
+---
+
+### **7. What’s New**
+- **What**: Latest updates and feature releases for CloudFront.
+- **Why**: Helps stay updated with new enhancements.
+- **Features**:
+  - Blog posts, announcements, and changelogs.
+- **Use Case**: DevOps teams monitor updates to optimize CDN configurations.
+
+---
+
+### **8. Telemetry**
+- **What**: Tracks and analyzes request-level logs for CloudFront.
+- **Why**: Provides deeper insights into user behavior and security.
+- **Features**:
+  - Near real-time logs.
+  - Security monitoring with AWS Shield.
+- **Use Case**: A cybersecurity firm detects unusual traffic patterns with telemetry data.
+
+---
+
+### **9. Monitoring**
+- **What**: Provides real-time metrics on CloudFront performance.
+- **Why**: Helps identify latency issues and optimize content delivery.
+- **Features**:
+  - Integration with AWS CloudWatch.
+  - Metrics for cache hit ratio, request counts, etc.
+- **Use Case**: A gaming company monitors CloudFront latency to optimize player experience.
+
+---
+
+### **10. Alarms**
+- **What**: Set up alerts for CloudFront performance and security.
+- **Why**: Helps detect issues like high error rates or latency.
+- **Features**:
+  - AWS CloudWatch integration.
+  - Custom thresholds for alerting.
+- **Use Case**: An online retail store gets alerts when CloudFront experiences high 5xx error rates.
+
+---
+
+### **11. Logs**
+- **What**: Detailed access logs for requests served by CloudFront.
+- **Why**: Helps troubleshoot errors and analyze user activity.
+- **Features**:
+  - Logs stored in Amazon S3.
+  - Supports logging of HTTP headers and request metadata.
+- **Use Case**: A digital publisher analyzes logs to identify popular articles.
+
+---
+
+### **12. Reports & Analytics**
+- **What**: Provides insights into CloudFront performance.
+- **Why**: Helps optimize caching and content delivery strategies.
+- **Features**:
+  - **Cache Statistics**: Cache hit/miss ratios.
+  - **Popular Objects**: Most frequently accessed files.
+  - **Top Referrers**: Traffic sources.
+  - **Usage Reports**: Data transfer and requests.
+  - **Viewers Reports**: Device types and locations.
+- **Use Case**: A video streaming service optimizes cache settings based on viewer analytics.
+
+---
+
+### **13. Security**
+#### **Origin Access**
+- **What**: Restricts CloudFront origins to allow only CloudFront access.
+- **Why**: Prevents unauthorized access to origin servers.
+- **Use Case**: A company secures its S3 bucket by allowing access only from CloudFront.
+
+#### **Field-Level Encryption**
+- **What**: Encrypts sensitive data before forwarding to origins.
+- **Why**: Enhances data security for PII.
+- **Use Case**: A healthcare app encrypts patient data at the field level.
+
+#### **Key Management**
+- **What**: Handles encryption keys for secure data transmission.
+- **Why**: Protects content delivery with advanced security.
+- **Use Case**: An online bank encrypts transaction data.
+
+#### **Public Keys & Key Groups**
+- **What**: Manages key-based access control for content.
+- **Why**: Secures private content sharing.
+- **Use Case**: A paid content website restricts access to authorized users.
+
+---
+
+### **14. Savings Bundle**
+- **What**: A cost-saving plan for CloudFront usage.
+- **Why**: Helps businesses save on CDN costs.
+- **Features**:
+  - Discounted pricing for committed usage.
+- **Use Case**: A large e-commerce platform subscribes to reduce CDN expenses.
+
+---
+
+### **15. Inventory**
+- **What**: Lists all CloudFront distributions and configurations.
+- **Why**: Provides an organized view of CDN assets.
+- **Use Case**: A DevOps team audits CloudFront setups for compliance.
+
+---
+
+### **16. Purchase**
+- **What**: Subscription and cost-related settings for CloudFront services.
+- **Why**: Helps businesses manage costs effectively.
+- **Use Case**: An enterprise evaluates different pricing plans for large-scale content delivery.
 
 ---
 
