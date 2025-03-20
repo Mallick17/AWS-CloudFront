@@ -6,7 +6,7 @@
 - CloudFront speeds up the distribution of your content by routing each user request through the AWS backbone network to the edge location that can best serve your content. Typically, this is a CloudFront edge server that provides the fastest delivery to the viewer. Using the AWS network dramatically reduces the number of networks that your users' requests must pass through, which improves performance. Users get lower latency—the time it takes to load the first byte of the file—and higher data transfer rates.
 - You also get increased reliability and availability because copies of your files (also known as objects) are now held (or cached) in multiple edge locations around the world.
 
-## Set-Up of CloudFront to Deliver Content
+## CloudFront Workflow
 ![image](https://github.com/user-attachments/assets/5ea0955b-9437-4039-9957-7cb167ff9558)
 
 Amazon CloudFront is a **Content Delivery Network (CDN)** service that speeds up the delivery of your web content by caching it in multiple locations worldwide. This reduces latency, improves performance, and helps efficiently serve users from the nearest location.
@@ -46,11 +46,11 @@ The image illustrates how CloudFront works in 5 key steps:
 ---
 
 ### **Why Use Amazon CloudFront?**
-✅ **Faster Load Times** → Content is served from the nearest location.  
-✅ **Reduces Server Load** → Edge locations handle most traffic, reducing requests to your origin.  
-✅ **Highly Scalable** → Automatically handles millions of requests per second.  
-✅ **Security Features** → Supports HTTPS, signed URLs, AWS Shield (DDoS protection), and IAM-based access controls.  
-✅ **Cost-Effective** → You pay for what you use, and caching reduces data transfer costs.  
+🔹 **Faster Load Times** → Content is served from the nearest location.  
+🔹 **Reduces Server Load** → Edge locations handle most traffic, reducing requests to your origin.  
+🔹 **Highly Scalable** → Automatically handles millions of requests per second.  
+🔹 **Security Features** → Supports HTTPS, signed URLs, AWS Shield (DDoS protection), and IAM-based access controls.  
+🔹 **Cost-Effective** → You pay for what you use, and caching reduces data transfer costs.  
 
 ---
 
