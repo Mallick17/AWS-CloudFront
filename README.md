@@ -9,9 +9,59 @@
 ## Set-Up of CloudFront to Deliver Content
 ![image](https://github.com/user-attachments/assets/5ea0955b-9437-4039-9957-7cb167ff9558)
 
+Amazon CloudFront is a **Content Delivery Network (CDN)** service that speeds up the delivery of your web content by caching it in multiple locations worldwide. This reduces latency, improves performance, and helps efficiently serve users from the nearest location.
 
+### **Step-by-Step CloudFront Workflow**
+The image illustrates how CloudFront works in 5 key steps:
 
+#### **1. Storing Content in the Origin Server**
+   - The origin server is the main storage for your web content.
+   - It can be **Amazon S3 (Simple Storage Service)** or an **HTTP server** (such as Apache, Nginx, or an EC2 instance running a web server).
+   - You **upload objects** (files like images, videos, HTML, JavaScript, and CSS) to the origin server.
 
+#### **2. Defining the Objects**
+   - These objects are the actual content that users will request.
+   - CloudFront can deliver static assets (images, stylesheets, JavaScript) and dynamic content (APIs, videos, and live streaming).
+   - If stored in **Amazon S3**, you can make them **public** or **private** (using signed URLs/cookies for restricted access).
+
+#### **3. Creating a CloudFront Distribution**
+   - A **distribution** is a CloudFront setup that connects your origin (Amazon S3/HTTP server) to CloudFront’s edge locations.
+   - You configure:
+     - **Origin URL** (where CloudFront fetches data from)
+     - **Caching policies** (how long content is stored in edge locations)
+     - **Security settings** (encryption, signed URLs, authentication)
+     - **Logging options** (to track user access)
+
+#### **4. CloudFront Assigns a Unique URL**
+   - After creating a distribution, CloudFront generates a **unique domain name** (e.g., `d111111abcdef8.cloudfront.net`).
+   - You can use this domain to serve content or map it to your **custom domain** (e.g., `www.example.com`).
+
+#### **5. Serving Content from Edge Locations**
+   - CloudFront caches copies of your content at **edge locations** (servers worldwide).
+   - When a user requests a file:
+     - If it’s **cached** in the nearest edge location → CloudFront delivers it instantly.
+     - If it’s **not cached** → CloudFront fetches it from the origin, caches it, and serves the user.
+   - This process reduces latency, improves load times, and saves bandwidth.
+
+---
+
+### **Why Use Amazon CloudFront?**
+✅ **Faster Load Times** → Content is served from the nearest location.  
+✅ **Reduces Server Load** → Edge locations handle most traffic, reducing requests to your origin.  
+✅ **Highly Scalable** → Automatically handles millions of requests per second.  
+✅ **Security Features** → Supports HTTPS, signed URLs, AWS Shield (DDoS protection), and IAM-based access controls.  
+✅ **Cost-Effective** → You pay for what you use, and caching reduces data transfer costs.  
+
+---
+
+### **Advanced Configuration**
+🔹 **Custom Domain Name (CNAMEs)** → Use your own domain (`www.example.com`) instead of the CloudFront URL.  
+🔹 **Cache Expiration** → Set expiration times for content in edge locations (default: 24 hours).  
+🔹 **Private Content** → Use signed URLs and signed cookies to restrict access.  
+🔹 **Origin Shield** → Adds another caching layer to further reduce load on the origin.  
+🔹 **AWS WAF Integration** → Protect against common web attacks.  
+
+---
 
 ### **Features of AWS CloudFront**
 1. **Low Latency & High Performance** – Uses edge locations to cache content closer to users.
@@ -40,11 +90,6 @@
 
 ---
 
-
-
-
----
-
 ### **AWS CloudFront Pricing**
 AWS CloudFront pricing is based on:
 1. **Data Transfer Out** – Charged per GB based on region.
@@ -56,61 +101,4 @@ To estimate costs, use the **AWS Pricing Calculator**.
 
 ---
 
-### **Terraform for CloudFront**
-Terraform can automate CloudFront distribution creation. Below is an example:
 
-```hcl
-provider "aws" {
-  region = "us-east-1"
-}
-
-resource "aws_s3_bucket" "my_bucket" {
-  bucket = "my-cloudfront-bucket"
-}
-
-resource "aws_cloudfront_origin_access_control" "oac" {
-  name                              = "my-oac"
-  origin_access_control_origin_type = "s3"
-  signing_behavior                  = "always"
-  signing_protocol                  = "sigv4"
-}
-
-resource "aws_cloudfront_distribution" "my_distribution" {
-  origin {
-    domain_name              = aws_s3_bucket.my_bucket.bucket_regional_domain_name
-    origin_id                = "S3Origin"
-    origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
-  }
-
-  enabled         = true
-  default_root_object = "index.html"
-
-  default_cache_behavior {
-    target_origin_id       = "S3Origin"
-    viewer_protocol_policy = "redirect-to-https"
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
-  }
-
-  viewer_certificate {
-    cloudfront_default_certificate = true
-  }
-}
-```
-
-#### **Steps to Deploy Using Terraform**
-1. Save the file as `main.tf`.
-2. Run:
-   ```sh
-   terraform init
-   terraform apply -auto-approve
-   ```
-3. CloudFront distribution will be created.
-
----
