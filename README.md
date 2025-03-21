@@ -196,3 +196,60 @@ Allows additional HTTP versions for improved performance.
 ### **Final Step: Create Distribution**
 Once all configurations are set, click **Create Distribution** to deploy your CloudFront distribution.
 
+---
+
+## After creating distribution a policy will be created for S3, Which should be attached in the S3 bucket
+```json
+{
+        "Version": "2008-10-17",
+        "Id": "PolicyForCloudFrontPrivateContent",
+        "Statement": [
+            {
+                "Sid": "AllowCloudFrontServicePrincipal",
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "cloudfront.amazonaws.com"
+                },
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::s3-cf-r53-acm/*",
+                "Condition": {
+                    "StringEquals": {
+                      "AWS:SourceArn": "arn:aws:cloudfront::339713104321:distribution/E27RLJ8JY2CMMF"
+                    }
+                }
+            }
+        ]
+      }
+```
+This policy is an AWS Identity and Access Management (IAM) policy for granting CloudFront access to private content stored in an S3 bucket. Let's break it down:
+
+### Overview:
+- **Version:** `"2008-10-17"`: This specifies the version of the policy language being used.
+- **Id:** `"PolicyForCloudFrontPrivateContent"`: This is a name for the policy.
+
+### Statement Breakdown:
+The policy contains a single statement. Here's what each part of it does:
+
+#### 1. **Sid (Statement ID)**:
+- `"Sid": "AllowCloudFrontServicePrincipal"`: This is an optional identifier for the statement. It's just a label to distinguish different statements in the policy.
+
+#### 2. **Effect**:
+- `"Effect": "Allow"`: This means the statement will allow actions specified in the policy. If it was `"Deny"`, it would block the actions.
+
+#### 3. **Principal**:
+- `"Principal": { "Service": "cloudfront.amazonaws.com" }`: This specifies that the service **CloudFront** is the entity allowed to access the resources (in this case, S3 objects). CloudFront, as the service principal, is being granted permissions.
+
+#### 4. **Action**:
+- `"Action": "s3:GetObject"`: This specifies the action that CloudFront is allowed to perform, which in this case is `s3:GetObject`. This action allows CloudFront to retrieve objects from an S3 bucket.
+
+#### 5. **Resource**:
+- `"Resource": "arn:aws:s3:::s3-cf-r53-acm/*"`: This specifies the S3 bucket and objects that CloudFront is allowed to access. The `arn:aws:s3:::s3-cf-r53-acm/*` is the ARN for an S3 bucket called `s3-cf-r53-acm` and all objects inside it (the `/*` means all objects).
+
+#### 6. **Condition**:
+- `"Condition": { "StringEquals": { "AWS:SourceArn": "arn:aws:cloudfront::339713104321:distribution/E27RLJ8JY2CMMF" } }`: This restricts the permissions based on the `AWS:SourceArn` condition. It means that CloudFront is only allowed to access the objects in the S3 bucket **if the request is coming from a specific CloudFront distribution** with the ARN `arn:aws:cloudfront::339713104321:distribution/E27RLJ8JY2CMMF`.
+
+### Key Takeaways:
+- This policy allows **Amazon CloudFront** to access objects in an S3 bucket (`s3-cf-r53-acm`), but only if the request is coming from the specified CloudFront distribution (`E27RLJ8JY2CMMF`).
+- The policy uses a **condition** to ensure that only requests from the specified CloudFront distribution can access the S3 bucket, making it more secure and restrictive.
+
+In short, this is a policy that enables CloudFront to retrieve private content from an S3 bucket, but only from a specific CloudFront distribution.
