@@ -272,7 +272,10 @@ This tab includes general configuration details about your CloudFront distributi
 This section helps secure your CloudFront distribution.
 
 ### 🔸 Web Application Firewall (WAF):
-- Protects against **common threats like SQL injection, XSS, etc.**
+- **Purpose:** Protect your app from **common web attacks** like:
+  - SQL Injection
+  - Cross-Site Scripting (XSS)
+  - Bad bots, etc.
 - **Core protections: Enabled** → This means standard AWS Managed Rules are active.
 - **Edit Button:** To configure WAF rules such as:
   - Rate-based rules
@@ -280,12 +283,19 @@ This section helps secure your CloudFront distribution.
   - Custom rules
   
 ### 🔸 CloudFront Geographic Restrictions:
+- **Allow or Block specific countries** from accessing your content.
+  - Useful for **compliance, licensing, or security**.
+  - Example: Block traffic from countries where your service isn't available.
 - Allows you to block/allow access from specific countries (Geo Restriction).
   - **Whitelist Mode**: Allow only selected countries.
   - **Blacklist Mode**: Block selected countries.
 
 ### 🔸 Security Trends:
 - Monitors allowed/blocked requests over time.
+- Shows how many requests were:
+  - **Allowed**
+  - **Blocked**
+  - **Counted**
 - You can filter:
   - **Date Range:** Last 24h, 7 days, etc.
   - **Granularity:** 5 min, 1h, 1 day.
@@ -295,72 +305,87 @@ This section helps secure your CloudFront distribution.
 ---
 
 ## 🌍 **3. Origins Tab**
-Defines where CloudFront fetches content from (Origin Server):
-- **Origin Domain Name:** Could be an S3 bucket, EC2, ELB, or external HTTP server.
+This is where you define the **origin source** (where CloudFront fetches content).
+
+- **Origin Domain Name:** Can be an **S3 bucket, EC2 instance, Load Balancer, or External HTTP server**.
 - **Origin Protocol Policy:**
   - HTTP Only
   - HTTPS Only
-  - Match Viewer
-- **Origin Shield:** Improves cache hit ratio by enabling a regional cache layer.
-- **Origin Access Control (OAC) or Origin Access Identity (OAI):**
-  - OAI is used with S3 to **restrict access only via CloudFront**.
+  - Match Viewer (follows viewer’s protocol)
+- **Origin Shield:** Extra caching layer between CloudFront and Origin to reduce origin load.
+- **Origin Access Control (OAC)/Origin Access Identity (OAI):**
+  - Restricts direct access to S3 buckets.
+  - Ensures content is only served via CloudFront, not directly from S3.
 - **CORS Settings (if applicable for S3 origin):**
   - CORS (Cross-Origin Resource Sharing) rules allow browser-based apps to access S3 content via CloudFront.
+  - Used if **JavaScript or frontend apps fetch S3 data via CloudFront**.
+  - You can allow specific origins (domains), methods (GET/POST), and headers.
 
 ---
 
 ## ⚙️ **4. Behaviors Tab**
-Controls how CloudFront handles requests:
-- **Path Pattern:** e.g., `/images/*`, `/api/*`, etc.
-- **Origin to Use:** Which origin to forward to based on the path.
+Controls **how CloudFront serves different content**.
+
+- **Path Pattern:** Define behaviors for specific URL patterns.
+  - Example: `/images/*` or `/api/*`
+- **Choose Origin:** Select which origin to forward to.
 - **Viewer Protocol Policy:**
   - Redirect HTTP to HTTPS
   - HTTPS Only
 - **Allowed HTTP Methods:**
-  - GET, HEAD (static content)
-  - GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE (for dynamic content)
-- **Caching Based on Headers, Cookies, Query Strings.**
-- **TTL Settings:**
-  - Minimum, Maximum, Default TTL (in seconds).
-- **Compress Objects Automatically:** Enable Gzip/Brotli compression.
+  - Static content: `GET, HEAD`
+  - Dynamic/API content: `GET, HEAD, POST, PUT, DELETE, OPTIONS`
+- **Cache Based On:**
+  - Headers, Cookies, Query Strings
+- **TTL (Time to Live):**
+  - Controls cache duration.
+  - **Min, Max, Default TTL** values in seconds.
+- **Compress Objects Automatically:**
+  - Gzip/Brotli compression for smaller, faster delivery.
 
 ---
 
 ## ❌ **5. Error Pages Tab**
-Customize responses for errors:
-- **HTTP Error Codes:** 403, 404, 502, etc.
-- **Custom Response Pages:** You can serve a custom HTML page for each error.
-- **TTL for Error Responses:** How long error response is cached.
+Allows you to configure **how errors are handled** when content isn’t found or errors occur.
+
+- **Custom Error Responses:** Replace default error pages (e.g., 403, 404, 500) with custom ones.
+  - Example: Redirect 404 to a user-friendly page like `/404.html`
+- **TTL for Error Responses:** How long to cache those errors.
 
 ---
 
 ## 🔄 **6. Invalidations Tab**
-Used to **remove cached files** from CloudFront edge locations:
-- **Path-based Invalidation:** e.g., `/index.html`, `/images/*`
-- Helps when you update content but want users to see the latest version immediately.
+Used to **clear outdated content from cache (edge locations)**.
+
+- **Why?** When you update a file (e.g., `index.html`), CloudFront still serves the old version until TTL expires.
+- **Invalidation Paths:** Define what to clear.
+  - Example: `/index.html` or `/*`
+- **Result:** CloudFront fetches the latest content from the origin.
+
 
 ---
 
 ## 🏷️ **7. Tags Tab**
-- Used for organizing and managing AWS resources.
-- You can tag a distribution using **key-value pairs** (e.g., `Environment=Prod`, `Team=WebDev`).
-- Helps in **billing, automation, and resource grouping.**
+Used for **resource management and billing**.
+
+- Add **key-value tags** like:
+  - `Environment=Production`
+  - `Project=ECommerce`
+- Helps with:
+  - **Cost allocation**
+  - **Resource grouping**
+  - **Automation via AWS tools**
 
 ---
 
 ## 📜 **8. Logging Tab**
-Enables access logs for requests served by CloudFront:
-- **Enable Logging:** Yes/No
-- **Log Bucket:** An S3 bucket where logs will be stored.
-- **Log Prefix:** (Optional) Helps categorize logs in S3 (e.g., `logs/cloudfront/`).
-- Logs include:
-  - Date/time
-  - Request IP
-  - URI
-  - Referrer
-  - User agent
-  - Result type (hit/miss/error)
-  - Bytes sent
+Enable detailed **request logging for analytics and troubleshooting**.
+
+- **Enable Logging:** Save logs of all user requests.
+- **Log Bucket:** Choose an S3 bucket to store logs.
+- **Log Prefix:** Optional folder path like `logs/2025/`
+- Logs contain:
+  - Time, IP, URI, Status code, Bytes served, Referrer, User-Agent, Cache status.
 
 ---
 
