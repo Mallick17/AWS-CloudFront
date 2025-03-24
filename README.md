@@ -256,7 +256,7 @@ In short, this is a policy that enables CloudFront to retrieve private content f
 
 ---
 
-## 🔍 **1. General Tab**
+## **1. General Tab**
 This tab includes general configuration details about your CloudFront distribution:
 - **Distribution ID & Domain Name:** Unique identifier and CloudFront domain (e.g., `dxxxxxx.cloudfront.net`) to access your content.
 - **Price Class:** Choose how many edge locations you want based on budget.
@@ -268,10 +268,10 @@ This tab includes general configuration details about your CloudFront distributi
 
 ---
 
-## 🔐 **2. Security Tab**
+## **2. Security Tab**
 This section helps secure your CloudFront distribution.
 
-### 🔸 Web Application Firewall (WAF):
+### Web Application Firewall (WAF):
 - **Purpose:** Protect your app from **common web attacks** like:
   - SQL Injection
   - Cross-Site Scripting (XSS)
@@ -282,7 +282,7 @@ This section helps secure your CloudFront distribution.
   - IP-based blocking
   - Custom rules
   
-### 🔸 CloudFront Geographic Restrictions:
+### CloudFront Geographic Restrictions:
 - **Allow or Block specific countries** from accessing your content.
   - Useful for **compliance, licensing, or security**.
   - Example: Block traffic from countries where your service isn't available.
@@ -290,7 +290,7 @@ This section helps secure your CloudFront distribution.
   - **Whitelist Mode**: Allow only selected countries.
   - **Blacklist Mode**: Block selected countries.
 
-### 🔸 Security Trends:
+### Security Trends:
 - Monitors allowed/blocked requests over time.
 - Shows how many requests were:
   - **Allowed**
@@ -304,7 +304,7 @@ This section helps secure your CloudFront distribution.
 
 ---
 
-## 🌍 **3. Origins Tab**
+## **3. Origins Tab**
 This is where you define the **origin source** (where CloudFront fetches content).
 
 - **Origin Domain Name:** Can be an **S3 bucket, EC2 instance, Load Balancer, or External HTTP server**.
@@ -323,7 +323,7 @@ This is where you define the **origin source** (where CloudFront fetches content
 
 ---
 
-## ⚙️ **4. Behaviors Tab**
+## **4. Behaviors Tab**
 Controls **how CloudFront serves different content**.
 
 - **Path Pattern:** Define behaviors for specific URL patterns.
@@ -345,7 +345,7 @@ Controls **how CloudFront serves different content**.
 
 ---
 
-## ❌ **5. Error Pages Tab**
+## **5. Error Pages Tab**
 Allows you to configure **how errors are handled** when content isn’t found or errors occur.
 
 - **Custom Error Responses:** Replace default error pages (e.g., 403, 404, 500) with custom ones.
@@ -354,7 +354,7 @@ Allows you to configure **how errors are handled** when content isn’t found or
 
 ---
 
-## 🔄 **6. Invalidations Tab**
+## **6. Invalidations Tab**
 Used to **clear outdated content from cache (edge locations)**.
 
 - **Why?** When you update a file (e.g., `index.html`), CloudFront still serves the old version until TTL expires.
@@ -365,7 +365,7 @@ Used to **clear outdated content from cache (edge locations)**.
 
 ---
 
-## 🏷️ **7. Tags Tab**
+## **7. Tags Tab**
 Used for **resource management and billing**.
 
 - Add **key-value tags** like:
@@ -378,7 +378,7 @@ Used for **resource management and billing**.
 
 ---
 
-## 📜 **8. Logging Tab**
+## **8. Logging Tab**
 Enable detailed **request logging for analytics and troubleshooting**.
 
 - **Enable Logging:** Save logs of all user requests.
@@ -393,7 +393,7 @@ Enable detailed **request logging for analytics and troubleshooting**.
 <details>
   <summary>Price Class Explained</summary>
 
-### 💰 **What is Price Class in CloudFront?**
+### **What is Price Class in CloudFront?**
 
 Price Class in CloudFront controls **which AWS edge locations** (data centers around the world) will be used to serve your content.  
 More edge locations = **better performance**, but also **higher cost**.
@@ -402,7 +402,7 @@ By selecting a Price Class, you balance between **performance** and **cost-effic
 
 ---
 
-### 📦 **Available Price Classes**
+### **Available Price Classes**
 
 | Price Class | Edge Locations Covered | Cost | Use Case |
 |-------------|-------------------------|------|----------|
@@ -412,7 +412,7 @@ By selecting a Price Class, you balance between **performance** and **cost-effic
 
 ---
 
-### 📌 **Key Points to Remember**
+### **Key Points to Remember**
 - All edge locations still **cache your content**, but with lower price classes, AWS **routes requests only through selected regions**.
 - **Origin stays the same**, only the **distribution edge delivery is affected**.
 - You can **change price class anytime** without redeploying the distribution.
@@ -420,7 +420,7 @@ By selecting a Price Class, you balance between **performance** and **cost-effic
 
 ---
 
-### ✅ **When to Use What? (Real Scenarios)**
+### **When to Use What? (Real Scenarios)**
 
 | Scenario | Recommended Price Class |
 |---------|--------------------------|
@@ -430,7 +430,7 @@ By selecting a Price Class, you balance between **performance** and **cost-effic
 
 ---
 
-### 📝 Example:
+### Example:
 > “Our main customers are in North America and Europe, so we chose **Price Class 100** to save cost. If in the future we expand to Asia-Pacific, we’ll switch to **Price Class 200 or All** for better global delivery speed.”
 
   
