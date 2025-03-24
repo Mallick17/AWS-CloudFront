@@ -253,3 +253,160 @@ The policy contains a single statement. Here's what each part of it does:
 - The policy uses a **condition** to ensure that only requests from the specified CloudFront distribution can access the S3 bucket, making it more secure and restrictive.
 
 In short, this is a policy that enables CloudFront to retrieve private content from an S3 bucket, but only from a specific CloudFront distribution.
+
+---
+
+## 🔍 **1. General Tab**
+This tab includes general configuration details about your CloudFront distribution:
+- **Distribution ID & Domain Name:** Unique identifier and CloudFront domain (e.g., `dxxxxxx.cloudfront.net`) to access your content.
+- **Price Class:** Choose how many edge locations you want based on budget.
+  - Example: *Price Class 100 = only US, Canada, Europe* (cheaper).
+- **Delivery Method:** Usually **Web** (for websites/APIs); RTMP is for media streaming (rare).
+- **Alternate Domain Names (CNAMEs):** Use custom domains like `cdn.mywebsite.com` instead of default.
+- **SSL/TLS Certificate:** Enables **HTTPS encryption** (Amazon-managed or custom certificate via ACM).
+- **Default Root Object:** The first file loaded if no path is specified (e.g., `index.html`).
+
+---
+
+## 🔐 **2. Security Tab**
+This section helps secure your CloudFront distribution.
+
+### 🔸 Web Application Firewall (WAF):
+- Protects against **common threats like SQL injection, XSS, etc.**
+- **Core protections: Enabled** → This means standard AWS Managed Rules are active.
+- **Edit Button:** To configure WAF rules such as:
+  - Rate-based rules
+  - IP-based blocking
+  - Custom rules
+  
+### 🔸 CloudFront Geographic Restrictions:
+- Allows you to block/allow access from specific countries (Geo Restriction).
+  - **Whitelist Mode**: Allow only selected countries.
+  - **Blacklist Mode**: Block selected countries.
+
+### 🔸 Security Trends:
+- Monitors allowed/blocked requests over time.
+- You can filter:
+  - **Date Range:** Last 24h, 7 days, etc.
+  - **Granularity:** 5 min, 1h, 1 day.
+  - **Rule Actions:** Allow, Block, Count.
+- Gives insight into how WAF is performing.
+
+---
+
+## 🌍 **3. Origins Tab**
+Defines where CloudFront fetches content from (Origin Server):
+- **Origin Domain Name:** Could be an S3 bucket, EC2, ELB, or external HTTP server.
+- **Origin Protocol Policy:**
+  - HTTP Only
+  - HTTPS Only
+  - Match Viewer
+- **Origin Shield:** Improves cache hit ratio by enabling a regional cache layer.
+- **Origin Access Control (OAC) or Origin Access Identity (OAI):**
+  - OAI is used with S3 to **restrict access only via CloudFront**.
+- **CORS Settings (if applicable for S3 origin):**
+  - CORS (Cross-Origin Resource Sharing) rules allow browser-based apps to access S3 content via CloudFront.
+
+---
+
+## ⚙️ **4. Behaviors Tab**
+Controls how CloudFront handles requests:
+- **Path Pattern:** e.g., `/images/*`, `/api/*`, etc.
+- **Origin to Use:** Which origin to forward to based on the path.
+- **Viewer Protocol Policy:**
+  - Redirect HTTP to HTTPS
+  - HTTPS Only
+- **Allowed HTTP Methods:**
+  - GET, HEAD (static content)
+  - GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE (for dynamic content)
+- **Caching Based on Headers, Cookies, Query Strings.**
+- **TTL Settings:**
+  - Minimum, Maximum, Default TTL (in seconds).
+- **Compress Objects Automatically:** Enable Gzip/Brotli compression.
+
+---
+
+## ❌ **5. Error Pages Tab**
+Customize responses for errors:
+- **HTTP Error Codes:** 403, 404, 502, etc.
+- **Custom Response Pages:** You can serve a custom HTML page for each error.
+- **TTL for Error Responses:** How long error response is cached.
+
+---
+
+## 🔄 **6. Invalidations Tab**
+Used to **remove cached files** from CloudFront edge locations:
+- **Path-based Invalidation:** e.g., `/index.html`, `/images/*`
+- Helps when you update content but want users to see the latest version immediately.
+
+---
+
+## 🏷️ **7. Tags Tab**
+- Used for organizing and managing AWS resources.
+- You can tag a distribution using **key-value pairs** (e.g., `Environment=Prod`, `Team=WebDev`).
+- Helps in **billing, automation, and resource grouping.**
+
+---
+
+## 📜 **8. Logging Tab**
+Enables access logs for requests served by CloudFront:
+- **Enable Logging:** Yes/No
+- **Log Bucket:** An S3 bucket where logs will be stored.
+- **Log Prefix:** (Optional) Helps categorize logs in S3 (e.g., `logs/cloudfront/`).
+- Logs include:
+  - Date/time
+  - Request IP
+  - URI
+  - Referrer
+  - User agent
+  - Result type (hit/miss/error)
+  - Bytes sent
+
+---
+
+
+<details>
+  <summary>Price Class Explained</summary>
+
+### 💰 **What is Price Class in CloudFront?**
+
+Price Class in CloudFront controls **which AWS edge locations** (data centers around the world) will be used to serve your content.  
+More edge locations = **better performance**, but also **higher cost**.
+
+By selecting a Price Class, you balance between **performance** and **cost-efficiency**.
+
+---
+
+### 📦 **Available Price Classes**
+
+| Price Class | Edge Locations Covered | Cost | Use Case |
+|-------------|-------------------------|------|----------|
+| **Price Class 100** | Only **U.S., Canada, and Europe** | 💲 Lowest | Best if most traffic is from North America & Europe. |
+| **Price Class 200** | **U.S., Canada, Europe + Asia + Africa + Middle East + South America (Some edge locations)** | 💲💲 Medium | Balanced cost & performance. Global audience but cost-conscious. |
+| **Price Class All** | **All edge locations worldwide** (full coverage) | 💲💲💲 Highest | Best performance globally; use if performance is more important than cost. |
+
+---
+
+### 📌 **Key Points to Remember**
+- All edge locations still **cache your content**, but with lower price classes, AWS **routes requests only through selected regions**.
+- **Origin stays the same**, only the **distribution edge delivery is affected**.
+- You can **change price class anytime** without redeploying the distribution.
+- **Data transfer and request costs** depend on which regions are used to deliver content.
+
+---
+
+### ✅ **When to Use What? (Real Scenarios)**
+
+| Scenario | Recommended Price Class |
+|---------|--------------------------|
+| App used only in U.S. and Europe | **Price Class 100** |
+| Startup app targeting global users but still cost-conscious | **Price Class 200** |
+| Enterprise-grade e-commerce site with users worldwide | **Price Class All** |
+
+---
+
+### 📝 Example:
+> “Our main customers are in North America and Europe, so we chose **Price Class 100** to save cost. If in the future we expand to Asia-Pacific, we’ll switch to **Price Class 200 or All** for better global delivery speed.”
+
+  
+</details>
